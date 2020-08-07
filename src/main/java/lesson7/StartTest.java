@@ -31,20 +31,22 @@ public class StartTest {
     }
 
     private static <T> void start(Class<T> c) {
+        //Для продолжения выполнения тестов при возникновении исключения
         isBeforeSuiteDone = false;
         isAfterSuiteDone = false;
         boolean isFinish = false;
         countDoneMethods = 0;
+
         while (!isFinish) {
             try {
-                isFinish = runTest(c);
+                isFinish = startTest(c);
             } catch (Exception e) {
                 Assert.assertException(e);
             }
         }
     }
 
-    private static <T> boolean runTest(Class<T> c) throws Exception {
+    private static <T> boolean startTest(Class<T> c) throws Exception {
         if (c.isAnnotationPresent(Test.class)) {
             throw new RuntimeException("Невозможно провести тест класса без аннотации @Test!");
         }
@@ -55,6 +57,7 @@ public class StartTest {
         T testClass = (T) constructor.newInstance();
         Method[] methods = c.getDeclaredMethods();
 
+        //Условие для единичного выполнения при возникновении исключения в одном из методов
         if(!isBeforeSuiteDone){
             runBeforeSuite(testClass, methods);
         }
@@ -62,6 +65,7 @@ public class StartTest {
 
         runTest(testClass, methods);
 
+        //Условие для единичного выполнения при возникновении исключения в одном из методов
         if(!isAfterSuiteDone){
             runAfterSuite(testClass, methods);
         }

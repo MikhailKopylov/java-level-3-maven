@@ -3,6 +3,10 @@ import java.lang.reflect.Method;
 
 public class CompareMethod implements Comparable<CompareMethod>{
 
+    @Override
+    public int compareTo(CompareMethod o) {
+        return   o.getAnnotation().priority() - annotation.priority() ;
+    }
     private final Method method;
     private final Test annotation;
 
@@ -11,10 +15,6 @@ public class CompareMethod implements Comparable<CompareMethod>{
         annotation =  method.getAnnotation(Test.class);
     }
 
-    @Override
-    public int compareTo(CompareMethod o) {
-        return   o.getAnnotation().priority() - annotation.priority() ;
-    }
 
     public Method getMethod() {
         return method;
